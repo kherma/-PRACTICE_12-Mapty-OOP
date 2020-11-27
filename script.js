@@ -61,12 +61,14 @@ class Cycling extends Workout {
 class App {
   #map;
   #mapEvent;
+  #mapZoom = 15;
   #workouts = [];
 
   constructor() {
     this._getPosition();
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
+    containerWorkouts.addEventListener('click', this._moveToPoput.bind(this));
   }
 
   _getPosition() {
@@ -83,7 +85,7 @@ class App {
   _loadMap(position) {
     // Get coords
     const { latitude, longitude } = position.coords;
-    this.#map = L.map('map').setView([latitude, longitude], 15);
+    this.#map = L.map('map').setView([latitude, longitude], this.#mapZoom);
 
     // Handling clicks on map
     this.#map.on('click', this._showForm.bind(this));
@@ -241,6 +243,23 @@ class App {
     }
 
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  _moveToPoput(event) {
+    const workoutElement = event.target.closest('.workout');
+
+    if (!workoutElement) return;
+
+    const workouts = this.#workouts.find(
+      workout => workout.id === workoutElement.dataset.id
+    );
+
+    this.#map.setView(workouts.coords, this.#mapZoom, {
+      animate: true,
+      pad: {
+        duration: 1,
+      },
+    });
   }
 }
 
