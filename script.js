@@ -11,6 +11,51 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+class Workout {
+  date = new Date();
+  id = new Date().toISOString().slice(-10);
+  constructor(coords, distance, duration) {
+    this.coords = coords;
+    this.distance = distance; // in km/h
+    this.duration = duration; // io min.
+    console.log(this.id);
+  }
+}
+
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace();
+  }
+
+  calcPace() {
+    // in min per km
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+    this.calcSpeed();
+  }
+
+  calcSpeed() {
+    // in km/h
+    this.speed = (this.distance * 60) / this.duration;
+    return this.speed;
+  }
+}
+
+// const running = new Running(-1, 10, 37, -1);
+// console.log(running.calcPace() + ' min. for km');
+// console.log(running);
+// const cycling = new Cycling(-1, 45, 127, -1);
+// console.log(cycling.calcSpeed() + ' km/h');
+
 class App {
   #map;
   #mapEvent;
@@ -59,6 +104,11 @@ class App {
 
   _newWorkout(event) {
     event.preventDefault();
+
+    // Get data from input fields
+    // Check if data is correct
+    // If actiivty is running => create running object
+    // If actiivty is cycling => create cycling object
 
     // Clear input fields
     const fields = form.getElementsByTagName('input');
